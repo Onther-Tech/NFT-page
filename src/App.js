@@ -16,9 +16,9 @@ const contract = new web3.eth.Contract(
 
 function App() {
   const [data, setData] = useState([])
-  const [eventName, setEventName] = useState('')
+  const [eventName, setEventName] = useState('event')
   const [input, setInput] = useState('')
-  const [selectValue, setSelectValue] = useState(['eventname-1', 'eventname-2', 'eventname-3'])
+  const [selectValue, setSelectValue] = useState(['event1', 'event2', 'event3'])
 
   const listItems = data.map((rowData, index) => <li className="address-list" key={index}>{rowData}<button onClick={() => deleteRow(data, index)}>delete</button></li>)
   
