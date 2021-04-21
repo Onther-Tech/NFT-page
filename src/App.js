@@ -61,7 +61,7 @@ function App() {
   const submit = async () => {
     console.log(data)
     console.log(eventName)
-    await contract.methods.mintBatch(data, eventName).call({ from: '0x6830d743D821C5b13416571eB713566396769Fdb'}, (error, result) => {
+    await contract.methods.mintBatch(data, eventName).send({ from: '0x6830d743D821C5b13416571eB713566396769Fdb'}, (error, result) => {
       if (error) {
         console.log(error)
       }
