@@ -4,19 +4,26 @@ import './App.css';
 import NFTMinterABI from "./abi/TokamakNFTMinter.json"
 import Web3 from 'web3';
 
-const mainNet = "https://mainnet.infura.io/v3/b8099123c7e64dc8ae82f8fa8b870bef"
-const rinkeby = "https://rinkeby.infura.io/v3/b8099123c7e64dc8ae82f8fa8b870bef"
-const web3 = new Web3(new Web3.providers.HttpProvider(rinkeby))
-const nftAddress = ' 0xe5949B80a7A28A4e3391543F362fDa1BACcdFA4A'
-const nftMinterAddress = '0x4aD610E6872Df1a8EF3B223c315ef080E5e200c5'
-const myAddress = '0x6830d743D821C5b13416571eB713566396769Fdb'
+let web3 = null;
+if (window.ethereum) {
+  web3 = new Web3(window.ethereum);
+  try {
+    window.ethereum.enable().then(function() {
+      console.log("Allowed");
+    });
+  } catch (e) {
+    console.log({ e });
+  }
+}
+
+const nftMinterAddress = '0x9E01Ae54b02298aC3d4cC98b2A3F538E928d457B' // need to change
 const contract = new web3.eth.Contract(
   NFTMinterABI.abi, nftMinterAddress
 )
 
 function App() {
   const [data, setData] = useState([])
-  const [eventName, setEventName] = useState('event')
+  const [eventName, setEventName] = useState('event1')
   const [input, setInput] = useState('')
   const [selectValue, setSelectValue] = useState(['event1', 'event2', 'event3'])
 
@@ -59,13 +66,14 @@ function App() {
   }
   
   const submit = async () => {
-    console.log(data)
-    console.log(eventName)
-    await contract.methods.mintBatch(data, eventName).send({ from: '0x6830d743D821C5b13416571eB713566396769Fdb'}, (error, result) => {
-      if (error) {
-        console.log(error)
-      }
-      console.log(result)
+    web3.eth.getAccounts().then(accounts => {
+      console.log({ accounts });
+      contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, result) => {
+        if (error) {
+          console.log(error)
+        }
+        console.log(result)
+      });
     });
   }
   
