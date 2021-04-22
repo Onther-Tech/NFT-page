@@ -61,6 +61,22 @@ function App() {
       index !== args
     ))
   }
+
+  const transferOwnerShip = () => {
+     web3.eth.getAccounts().then(accounts => {
+      console.log({ accounts });
+      contract.methods.transferAdminRights('0x6830d743D821C5b13416571eB713566396769Fdb').send({ from: accounts[0] }, (error, txResult) => {
+        if (error) {
+          alert(error)
+        }
+        setResult([...result, txResult]);
+      }).on('error', (error) => {
+        console.log(error)
+        setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
+      })
+        ;
+    });
+  }
   
   const submit = async () => {
     if (data.length === 0) {
@@ -105,6 +121,7 @@ function App() {
       </div>
       <div className="btn-container">
         <div style={{ width: 250, display: 'flex', flexDirection: 'column' }}>
+            <button onClick={()=>transferOwnerShip()}>TransferAdmin</button>
           <h2>Eventname-list</h2>
           <div style={{display: 'flex'} }>
           <input style={{marginRight: 10}}></input>
@@ -116,7 +133,8 @@ function App() {
           <div style={{display: 'flex', justifyContent: 'space-around'}}>
         <select style={{ width: 150, height: 40 }} onChange={handleSelectChange} >
           {selectItems}
-        </select>
+            </select>
+         
             <button className="btn-send" style={{ height: 40, width: 100 }} onClick={() => submit()}>Send</button>
           </div>
           <div style={{display: 'flex', justifyContent: 'space-around'}}>
