@@ -15,6 +15,7 @@
     text-align: left;
     width: 700px;
     height: 300px;
+    overflow:auto;
 }
 .btn-container {
     display: flex;
