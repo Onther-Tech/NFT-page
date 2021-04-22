@@ -16,7 +16,7 @@ if (window.ethereum) {
   }
 }
 
-const nftMinterAddress = '0x9E01Ae54b02298aC3d4cC98b2A3F538E928d457B' // need to change
+const nftMinterAddress = '0x4aD610E6872Df1a8EF3B223c315ef080E5e200c5'
 const contract = new web3.eth.Contract(
   NFTMinterABI.abi, nftMinterAddress
 )
@@ -26,8 +26,10 @@ function App() {
   const [eventName, setEventName] = useState('event1')
   const [input, setInput] = useState('')
   const [selectValue, setSelectValue] = useState(['event1', 'event2', 'event3'])
+  const [result, setResult] = useState([])
+  const [err, setErr] = useState([])
 
-  const listItems = data.map((rowData, index) => <li className="address-list" key={index}>{rowData}<button onClick={() => deleteRow(data, index)}>delete</button></li>)
+  const listItems = data.map((rowData, index) => <div className="address-list"><li key={index}>{rowData}</li><button onClick={() => deleteRow(data, index)}>delete</button></div>)
   
   const selectItems = selectValue.map((rowData, index) => <option value={rowData}>{rowData}</option>)
 
@@ -38,19 +40,14 @@ function App() {
   }
 
   const handleSelectChange = (e) => {
+    setData([])
     setEventName(e.target.value)
   }
 
   const insertRow = () => {
-    const result = data.filter(d => d === input)
-
     if (input === '') {
       return alert("Please input address")
     }
-    if (result.length > 0) {
-      return alert("This address is already added")
-    }
-
     setData([...data, input])
   }
 
@@ -66,20 +63,33 @@ function App() {
   }
   
   const submit = async () => {
+    if (data.length === 0) {
+      return alert("Please put an address")
+    }
+    
+    const confirmed = window.confirm("Are you sure?");
+    if (confirmed === false) {
+      return 
+    }
+    
     web3.eth.getAccounts().then(accounts => {
       console.log({ accounts });
-      contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, result) => {
+      contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, txResult) => {
         if (error) {
-          console.log(error)
+          alert(error)
         }
-        console.log(result)
-      });
+        setResult([...result, txResult]);
+      }).on('error', (error) => {
+        console.log(error)
+        setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
+      })
+        ;
     });
   }
   
   return (
     <div className="App">
-      <h1>Title</h1>
+      <h1 style={{color: '#167BBC'}}>Onther-NFT-page</h1>
       <div style={{ marginBottom: 40 }}>
         <div className="top-container">
         <h2>Address</h2>
@@ -102,11 +112,28 @@ function App() {
           </div>
           <div style={{marginTop: 20}}>{controledSelectItems}</div>
         </div>
+        <div style={{display: 'flex', flexDirection: 'column', width: '50%'}}>
+          <div style={{display: 'flex', justifyContent: 'space-around'}}>
         <select style={{ width: 150, height: 40 }} onChange={handleSelectChange} >
           {selectItems}
         </select>
-          <button className="btn-send" style={{height:40, width: 100}} onClick={() => submit()}>Send</button>
-       
+            <button className="btn-send" style={{ height: 40, width: 100 }} onClick={() => submit()}>Send</button>
+          </div>
+          <div style={{display: 'flex', justifyContent: 'space-around'}}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            <h2>Result</h2>
+            {result.length !== 0 ?  result.map(rowData => <a href={"https://rinkeby.etherscan.io/tx/" + rowData} target="_blank" rel="noreferrer noopener">
+              {rowData.slice(0, 5) + "..." + rowData.slice(-5)}
+            </a>) : ''}
+            </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            <h2>Error</h2>
+              {err.map(rowData => <span>{rowData}</span>)}
+          </div>
+          </div>
+          </div>
         </div>
     </div>
   );
