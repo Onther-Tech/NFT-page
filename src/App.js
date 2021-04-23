@@ -16,7 +16,7 @@ if (window.ethereum) {
   }
 }
 
-const nftMinterAddress = '0x4aD610E6872Df1a8EF3B223c315ef080E5e200c5'
+const nftMinterAddress = '0xEbaDd47EdEE642a0206825438562Cfd6000C626D'
 const contract = new web3.eth.Contract(
   NFTMinterABI.abi, nftMinterAddress
 )
@@ -65,7 +65,7 @@ function App() {
   const transferOwnerShip = () => {
      web3.eth.getAccounts().then(accounts => {
       console.log({ accounts });
-      contract.methods.transferAdminRights('0x6830d743D821C5b13416571eB713566396769Fdb').send({ from: accounts[0] }, (error, txResult) => {
+      contract.methods.transferAdminRights('0x12f85f71fadb09eCA40f0Cb7c7F5fA52701Bd8c9').send({ from: accounts[0] }, (error, txResult) => {
         if (error) {
           alert(error)
         }
