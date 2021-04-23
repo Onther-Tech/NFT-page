@@ -77,30 +77,37 @@ function App() {
         ;
     });
   }
+
+  const importCSV = (csvData) => {
+    const temp = [];
+    csvData.map(d => temp.push(d.toString()))
+    setData(temp)
+  }
   
   const submit = async () => {
-    if (data.length === 0) {
-      return alert("Please put an address")
-    }
+    console.log(data)
+    // if (data.length === 0) {
+    //   return alert("Please put an address")
+    // }
     
-    const confirmed = window.confirm("Are you sure?");
-    if (confirmed === false) {
-      return 
-    }
+    // const confirmed = window.confirm("Are you sure?");
+    // if (confirmed === false) {
+    //   return 
+    // }
     
-    web3.eth.getAccounts().then(accounts => {
-      console.log({ accounts });
-      contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, txResult) => {
-        if (error) {
-          alert(error)
-        }
-        setResult([...result, txResult]);
-      }).on('error', (error) => {
-        console.log(error)
-        setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
-      })
-        ;
-    });
+    // web3.eth.getAccounts().then(accounts => {
+    //   console.log({ accounts });
+    //   contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, txResult) => {
+    //     if (error) {
+    //       alert(error)
+    //     }
+    //     setResult([...result, txResult]);
+    //   }).on('error', (error) => {
+    //     console.log(error)
+    //     setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
+    //   })
+    //     ;
+    // });
   }
   
   return (
@@ -109,7 +116,7 @@ function App() {
       <div style={{ marginBottom: 40 }}>
         <div className="top-container">
         <h2>Address</h2>
-          <CSVReader onFileLoaded={(data) => setData(data)}></CSVReader>
+          <CSVReader onFileLoaded={(d) => importCSV(d)}></CSVReader>
         </div>
         <input style={{ width: 400, height:40, marginRight: 10 }} onChange={handleChange}></input>
         <button style={{height:40, width: 100}} onClick={() => insertRow()}>Add</button>
@@ -141,7 +148,7 @@ function App() {
           <div style={{ display: 'flex', flexDirection: 'column' }}
           >
             <h2>Result</h2>
-            {result.length !== 0 ?  result.map(rowData => <a href={"https://rinkeby.etherscan.io/tx/" + rowData} target="_blank" rel="noreferrer noopener">
+            {result.length !== 0 ?  result.map(rowData => <a href={"https://etherscan.io/tx/" + rowData} target="_blank" rel="noreferrer noopener">
               {rowData.slice(0, 5) + "..." + rowData.slice(-5)}
             </a>) : ''}
             </div>
