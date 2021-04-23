@@ -73,8 +73,7 @@ function App() {
       }).on('error', (error) => {
         console.log(error)
         setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
-      })
-        ;
+      });
     });
   }
 
@@ -86,28 +85,29 @@ function App() {
   
   const submit = async () => {
     console.log(data)
-    // if (data.length === 0) {
-    //   return alert("Please put an address")
-    // }
     
-    // const confirmed = window.confirm("Are you sure?");
-    // if (confirmed === false) {
-    //   return 
-    // }
+    if (data.length === 0) {
+      return alert("Please put an address")
+    }
     
-    // web3.eth.getAccounts().then(accounts => {
-    //   console.log({ accounts });
-    //   contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, txResult) => {
-    //     if (error) {
-    //       alert(error)
-    //     }
-    //     setResult([...result, txResult]);
-    //   }).on('error', (error) => {
-    //     console.log(error)
-    //     setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
-    //   })
-    //     ;
-    // });
+    const confirmed = window.confirm("Are you sure?");
+    if (confirmed === false) {
+      return 
+    }
+    
+    web3.eth.getAccounts().then(accounts => {
+      console.log({ accounts });
+      contract.methods.mintBatch(data, eventName).send({ from: accounts[0] }, (error, txResult) => {
+        if (error) {
+          alert(error)
+        }
+        setResult([...result, txResult]);
+      }).on('error', (error) => {
+        console.log(error)
+        setErr([...err, 'Something is wrong. Please put F12 and check the error log'])
+      })
+        ;
+    });
   }
   
   return (
