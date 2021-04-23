@@ -16,7 +16,7 @@ if (window.ethereum) {
   }
 }
 
-const nftMinterAddress = '0xEbaDd47EdEE642a0206825438562Cfd6000C626D'
+const nftMinterAddress = '0xFAd10B39a53C4ebF349B5fBAEf87cdF0bC99a773'
 const contract = new web3.eth.Contract(
   NFTMinterABI.abi, nftMinterAddress
 )
