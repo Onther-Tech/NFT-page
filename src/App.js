@@ -84,15 +84,18 @@ function App() {
   }
   
   const submit = async () => {
-    console.log(data)
     
     if (data.length === 0) {
       return alert("Please put an address")
     }
     
-    const confirmed = window.confirm("Are you sure?");
-    if (confirmed === false) {
-      return 
+    const checkAddress = data.filter((d, index) => d === data[index - 1])
+    
+    if (checkAddress.length > 0) {
+      const confirmed = window.confirm(`There are duplicate addresses. \n ${checkAddress.map(add => `\n${add}`)}`)
+      if (confirmed === false) {
+        return 
+      }
     }
     
     web3.eth.getAccounts().then(accounts => {
